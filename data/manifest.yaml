@@ -1,0 +1,37 @@
+# Pre-registered parity gate for py-SpaNorm
+package: py-SpaNorm
+upstream:
+  name: SpaNorm
+  version: "1.5.2"
+  source: Bioconductor
+  url: https://github.com/bhuvad/SpaNorm
+
+# Class 1: deterministic numerical — normalised float matrix
+algorithm_class: deterministic
+parity_threshold: 1.0e-8
+
+fixture:
+  path: data/fixture_HumanDLPFC.h5ad
+  source: SpaNorm::HumanDLPFC (SpatialLIBD)
+  description: Human DLPFC Visium sample, lowly expressed genes filtered
+  expected_shape: [4000, 200]
+
+reference_command: tests/r_reference_driver.R
+seed: 42
+
+outputs:
+  - name: logcounts
+    type: "2d matrix"
+    location_reference: "$.logcounts"
+    location_candidate: "adata.layers['logcounts']"
+    metric: deterministic
+    threshold: 1.0e-8
+
+acceleration:
+  enabled: true
+  max_iterations: 20
+  must_pass_gate: true
+
+audit_class: null
+created_by: rebuildr-agent
+created_at: 2026-05-27
