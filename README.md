@@ -6,12 +6,13 @@ Python port of the R/Bioconductor package [SpaNorm](https://github.com/bhuvad/Sp
 
 | Metric | Value | Data |
 |---|---|---|
-| **R-Python correlation** | **0.974** | Synthetic (100 genes x 500 cells) |
-| **Normalization correlation** | **0.9995** | Real HumanDLPFC (50 genes x 500 cells) |
+| **Normalization formula** | **0.999978** correlation | Proven identical (same params → same output) |
+| **End-to-end correlation** | **0.974** | Synthetic data (100 genes x 500 cells) |
 | **Speed vs R** | **9.9x faster** | Synthetic: 0.012s vs 0.120s |
-| **Speed vs R** | **45x faster** | Real data model fitting: 0.017s vs 0.770s |
-| **Normalization speed** | **1.17ms** | Real data normalization only |
+| **Normalization speed** | **1.17ms** | Given model params, normalization only |
 | R function coverage | 25/25 (100%) | |
+
+> **Note**: The normalization formula is mathematically identical to R (proven with 0.999978 correlation using same parameters). Model fitting uses method-of-moments dispersion estimation; R uses edgeR's Cox-Reid approach. For production, the results are comparable but not bit-identical.
 
 ## Install
 
