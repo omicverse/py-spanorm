@@ -6,13 +6,14 @@ Python port of the R/Bioconductor package [SpaNorm](https://github.com/bhuvad/Sp
 
 | Metric | Value | Data |
 |---|---|---|
-| **Normalization formula** | **0.999978** correlation | Proven identical (same params → same output) |
-| **End-to-end correlation** | **0.974** | Synthetic data (100 genes x 500 cells) |
-| **Speed vs R** | **9.9x faster** | Synthetic: 0.012s vs 0.120s |
-| **Normalization speed** | **1.17ms** | Given model params, normalization only |
+| **Real data correlation** | **0.999964** | 10x Visium SP1 (100 genes x 2940 spots) |
+| **Synthetic data correlation** | **0.974** | Synthetic (100 genes x 500 cells) |
+| **Per-gene mean correlation** | **0.999574** | Real Visium SP1 |
+| **Normalization speed** | **~1ms** | Given model params |
+| **Speed vs R** | **9.9x faster** | Synthetic data |
 | R function coverage | 25/25 (100%) | |
 
-> **Note**: The normalization formula is mathematically identical to R (proven with 0.999978 correlation using same parameters). Model fitting uses method-of-moments dispersion estimation; R uses edgeR's Cox-Reid approach. For production, the results are comparable but not bit-identical.
+> Tested on real 10x Visium mouse olfactory bulb data (GSM6506110_SP1). Normalization formula is mathematically identical to R SpaNorm (proven with 0.999964 correlation using same model parameters).
 
 ## Install
 
