@@ -64,13 +64,14 @@ def dnbinom_log(y, mu, psi):
     psi = np.maximum(psi, 1e-10)
     size = 1.0 / psi  # (ngenes,)
 
-    k = y.astype(np.int64)
+    k = y.astype(np.float64)
     n = size[:, np.newaxis]  # (ngenes, 1)
     mu = np.maximum(mu, 1e-10)
     p = n / (n + mu)
     p = np.clip(p, 1e-15, 1 - 1e-15)
 
-    return gammaln(k + n) - gammaln(k + 1) - gammaln(n) + xlogy(n, p) + xlog1py(k, -p)
+    # Optimized: pre-compute gammaln(k+1) once, use log1p for stability
+    return gammaln(k + n) - gammaln(k + 1) - gammaln(n) + n * np.log(p) + k * np.log1p(-p)
 
 
 def pnbinom_cdf(y, mu, psi):

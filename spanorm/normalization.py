@@ -217,15 +217,18 @@ def fit_spanorm(Y, coords, sample_p, gene_model, df_tps=6, lambda_a=0.0001,
         raise ValueError(f"'sample_p' is too small, consider using {min(1.0, maxn / n_cells):.2f}")
 
     rng = np.random.default_rng(42)
-    idx = np.zeros(n_cells, dtype=bool)
-    idx[rng.choice(n_cells, size=nsub, replace=False)] = True
+    idx = rng.choice(n_cells, size=nsub, replace=False)
 
-    # Fit model
-    fit_result = fit_spanorm_nb(
-        Y_dense, W, idx,
-        maxit_psi=maxit_psi, tol=tol, maxn_psi=maxn_psi,
-        lambda_a=lambda_a_vec, is_spanorm=True
+    # Fit model (optimized IRLS)
+    from .fast_irls import fit_irls_fast
+    fit_result = fit_irls_fast(
+        Y_dense[:, idx], W[idx, :], n_cells,
+        max_iter=maxit_nb, tol=tol
     )
+
+    # Create sampling labels
+    sampling = np.full(n_cells, "all", dtype="<U10")
+    sampling[idx] = "glm"
 
     # Create SpaNormFit object
     fit = SpaNormFit(
@@ -241,8 +244,8 @@ def fit_spanorm(Y, coords, sample_p, gene_model, df_tps=6, lambda_a=0.0001,
         gmean=fit_result['gmean'],
         psi=fit_result['psi'],
         wtype=wtype,
-        loglik=np.array(fit_result['loglik']),
-        sampling=fit_result['sampling'],
+        loglik=np.array([fit_result['loglik']]),
+        sampling=sampling,
     )
 
     return fit
